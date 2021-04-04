@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class Endpoints(models.Model):
+class Endpoint(models.Model):
     '''
     The Endpoint object represents ML API endpoint.
 

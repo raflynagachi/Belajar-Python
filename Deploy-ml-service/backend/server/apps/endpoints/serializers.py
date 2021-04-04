@@ -5,7 +5,7 @@ from apps.endpoints.models import MLAlgorithm
 from apps.endpoints.models import MLAlgorithmStatus
 from apps.endpoints.models import MLRequest
 
-class EndpointSerializer(serializers.ModelSeriealizer):
+class EndpointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Endpoint
         read_only_fields = ('id', 'name', 'owner', 'created_at')
