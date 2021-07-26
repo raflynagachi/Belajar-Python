@@ -1,13 +1,13 @@
-import cv2 as cv
+import cv2
 import numpy as np
 
 # Read images
-# img = cv.imread('Resources/Photos/cat_large.jpg')
-# cv.imshow('cat', np.array(img, dtype=np.uint8))
-# cv.waitKey()
+# img = cv2.imread('Resources/Photos/cat_large.jpg')
+# cv2.imshow('cat', np.array(img, dtype=np.uint8))
+# cv2.waitKey()
 
 # Read videos (Webcam/videos file)
-capture = cv.VideoCapture(0)
+capture = cv2.VideoCapture(0)
 webcam = capture.isOpened()
 
 while webcam:
@@ -15,19 +15,19 @@ while webcam:
 
     if isTrue:
         # Add grayscale filter
-        gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Fliping the image as said in question
-        gray_flip = cv.flip(gray, 1)
-        frame_flip = cv.flip(frame, 1)
+        gray_flip = cv2.flip(gray, 1)
+        frame_flip = cv2.flip(frame, 1)
 
         # Combining the two different image frames in one window
         combined_window = np.hstack([gray, gray_flip])
 
-        cv.imshow('video', frame_flip)
+        cv2.imshow('video', frame_flip)
 
-    if cv.waitKey(1) == ord('q'):
+    if cv2.waitKey(1) == ord('q'):
         break
 
 capture.release()
-cv.destroyAllWindows()
+cv2.destroyAllWindows()
