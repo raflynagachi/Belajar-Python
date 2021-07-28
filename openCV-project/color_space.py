@@ -26,7 +26,7 @@ lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
 rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 cv2.imshow('RGB', rgb)
 
-# plt.imshow(img)
-# plt.show()
+plt.imshow(img)
+plt.show()
 
 cv2.waitKey(0)
