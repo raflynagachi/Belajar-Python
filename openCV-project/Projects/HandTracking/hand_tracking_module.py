@@ -31,15 +31,16 @@ class handDetector():
 
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handNo]
+            h, w, c = img.shape
 
             for id, lm in enumerate(myHand.landmark):
                 # print(id, lm)
-                h, w, c = img.shape
                 cx, cy = int(lm.x*w), int(lm.y*h)
                 # print(id, cx, cy)
                 lmList.append([id, cx, cy])
-                cv2.putText(img, str(id), (cx+5, cy+5),
-                            cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (255, 0, 255), 1)
+                if draw:
+                    cv2.putText(img, str(id), (cx+5, cy+5),
+                                cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (255, 0, 255), 1)
 
         return lmList
 
