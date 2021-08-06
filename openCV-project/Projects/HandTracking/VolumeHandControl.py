@@ -86,5 +86,7 @@ while True:
                 cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 255), 2)
 
     cv2.imshow('Images', img)
+
+    # 'Quit' press q
     if cv2.waitKey(1) == ord('q'):
         break
