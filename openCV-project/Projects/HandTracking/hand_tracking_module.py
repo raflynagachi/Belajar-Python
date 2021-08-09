@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
+import math
 
 
 class handDetector():
@@ -63,6 +64,22 @@ class handDetector():
                 fingers.append(0)
 
         return fingers
+
+    def findDistance(self, finger1, finger2, img, draw=True, r=15, t=3):
+        x1, y1 = self.lmList[finger1][1], self.lmList[finger1][2]
+        x2, y2 = self.lmList[finger2][1], self.lmList[finger2][2]
+        cx, cy = (x1+x2)//2, (y1+y2)//2
+
+        if draw:
+            cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), t)
+            cv2.circle(img, (x1, y1), r, (255, 0, 0), -1)
+            cv2.circle(img, (x2, y2), r, (255, 0, 0), -1)
+            cv2.circle(img, (cx, cy), r, (255, 0, 0), -1)
+
+        length = math.hypot(x2-x1, y2-y1)
+        # print(length)
+
+        return length, img, [x1, y1, x2, y2, cx, cy]
 
 
 def main():
