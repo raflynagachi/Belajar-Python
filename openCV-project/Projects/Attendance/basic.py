@@ -24,6 +24,14 @@ cv2.rectangle(img_test, (faceloc_test[3], faceloc_test[0]),
 # print('=================================')
 # print(encode)
 
+results = face_recognition.compare_faces([encode], encode_test)
+face_dist = face_recognition.face_distance([encode], encode_test)
+cv2.putText(img_test, f'{results} {round(face_dist[0],2)}', (
+    20, 20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.4, (0, 255, 0), 1)
+
+# print(results)
+# print(face_dist)
+
 cv2.imshow('Images', img)
 cv2.imshow('Images_test', img_test)
 cv2.waitKey()
