@@ -8,8 +8,8 @@ class image_manipulation:
         # (threshold) T yang dispesifikasikan. Ukuran citra adalah M x N.
         # citra_biner adalah tipe data untuk citra biner)
         citra_biner = np.zeros((M, N), dtype=int)
-        print(threshold)
-        print(citra_biner)
+        # print(threshold)
+        # print(citra_biner)
         for i in range(M):
             for j in range(N):
                 if citra[i][j] < threshold:
@@ -102,7 +102,25 @@ class image_manipulation:
                 citra_not_boolean[i][j] = not citra_biner_a[i][j]
         return citra_not_boolean
 
-    def translation(self, citra, M, N, b, a):
+    def and_boolean(self, citra_biner_a, citra_biner_b, M, N):
+        # Membuat citra boolean 'dan' dari citra biner A dan B.
+        # Ukuran citra A dan B adalah M x N.
+        citra_and_boolean = np.zeros((M, N), dtype=int)
+        for i in range(M):
+            for j in range(N):
+                citra_and_boolean[i][j] = citra_biner_a[i][j] and citra_biner_b[i][j]
+        return citra_and_boolean
+
+    def or_boolean(self, citra_biner_a, citra_biner_b, M, N):
+        # Membuat citra boolean 'or' dari citra biner A dan B.
+        # Ukuran citra A dan B adalah M x N.
+        citra_or_boolean = np.zeros((M, N), dtype=int)
+        for i in range(M):
+            for j in range(N):
+                citra_or_boolean[i][j] = citra_biner_a[i][j] or citra_biner_b[i][j]
+        return citra_or_boolean
+
+    def translation(self, citra, M, N, a, b):
         # Mentranslasi citra A sejauh a, b menjadi citra B. Ukuran citra M x N.
         citra_translation = np.zeros((M, N), dtype=int)
         for i in range(M):
@@ -132,3 +150,59 @@ class image_manipulation:
                 citra_rotated[j][k] = citra[i][j]
             k -= 1
         return citra_rotated
+
+    def horizontal_flip(self, citra_a, M, N):
+        # Flipping horizontal (pencerminan terhadap sumbu-y) terhadap citra A.
+        # Ukuran citra adalah M x N. Hasil flipping disimpan di dalam citra B.
+        citra_flip = np.zeros((M, N), dtype=int)
+        for i in range(M):
+            k = 1
+            for j in range(N):
+                citra_flip[i][N-k] = citra_a[i][j]
+                k += 1
+        return citra_flip
+
+    def vertical_flip(self, citra_a, M, N):
+        # Flipping vertikal (pencerminan terhadap sumbu-X) terhadap citra A.
+        # Ukuran citra adalah M x N. Hasil flipping disimpan di dalam citra B.
+        citra_flip = np.zeros((M, N), dtype=int)
+        k = N-1
+        for i in range(M):
+            for j in range(N):
+                citra_flip[k][j] = citra_a[i][j]
+            k -= 1
+        return citra_flip
+
+    def zoom_in(self, citra_a, M, N):
+        # perbesaran citra A dengan faktor skala 2
+        # Ukuran citra adalah M x N. Hasil perbesaran disimpa d dalam citra B.
+        m = 0
+        n = 0
+        citra_zoom = np.zeros((M, N), dtype=int)
+        for i in range(M):
+            for j in range(N):
+                if ((m+1) < M) and ((n+1) < N):
+                    citra_zoom[m][n] = citra_a[i][j]
+                    citra_zoom[m][n+1] = citra_a[i][j]
+                    citra_zoom[m+1][n] = citra_a[i][j]
+                    citra_zoom[m+1][n+1] = citra_a[i][j]
+                    n = n+2
+            m = m+2
+            n = 0
+        return citra_zoom
+
+    def zoom_out(self, citra_a, M, N):
+        # pengecilan citra A dengan faktor skala 2
+        # Ukuran citra adalah M x N. Hasil perbesaran disimpa d dalam citra B.
+        m = 0
+        n = 0
+        citra_zoom = np.zeros((M, N), dtype=int)
+        for i in range(M):
+            for j in range(N):
+                if ((m+1) < M) and ((n+1) < N):
+                    citra_zoom[i][j] = max(
+                        citra_a[m][n], citra_a[m+1][n], citra_a[m][n+1], citra_a[m+1][n+1])
+                    n = n+2
+            m = m+2
+            n = 4
+        return citra_zoom

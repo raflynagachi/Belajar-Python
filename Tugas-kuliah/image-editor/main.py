@@ -6,7 +6,6 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename
 from PIL import Image, ImageTk
 import os
 
-from numpy.lib.type_check import imag
 import image_manipulation as img_m
 
 # contrast border thumbnail
@@ -49,7 +48,7 @@ def selected(image_idx=1):
 def reset():
     global img_path, img_array, canvas2
     img = Image.open(img_path)
-    img.thumbnail((350, 350))
+    img.thumbnail((250, 250))
     img_array = np.array(img)
 
     img1 = ImageTk.PhotoImage(img)
@@ -140,7 +139,7 @@ def img_not():
 def img_trans():
     global img_mnp, img_array, M, N, input_x_trs, input_y_trs
     img_result_arr = img_mnp.translation(
-        img_array, M, N, int(input_x_trs.get()), int(input_y_trs.get()))
+        img_array, M, N, int(input_y_trs.get()), int(input_x_trs.get()))
     update_image(img_result_arr)
 
 
@@ -150,6 +149,24 @@ def img_rotate(event):
         img_result_arr = img_mnp.rotation90CCW(img_array, M, N)
     else:
         img_result_arr = img_mnp.rotation90CW(img_array, M, N)
+    update_image(img_result_arr)
+
+
+def img_zoom(event):
+    global img_mnp, img_array, M, N, zoom_combo
+    if str(zoom_combo.get()) == "Zoom in":
+        img_result_arr = img_mnp.zoom_in(img_array, M, N)
+    else:
+        img_result_arr = img_mnp.zoom_out(img_array, M, N)
+    update_image(img_result_arr)
+
+
+def img_flip(event):
+    global img_mnp, img_array, M, N, flip_combo
+    if str(flip_combo.get()) == "Flip horizontal":
+        img_result_arr = img_mnp.horizontal_flip(img_array, M, N)
+    else:
+        img_result_arr = img_mnp.vertical_flip(img_array, M, N)
     update_image(img_result_arr)
 
 
@@ -167,10 +184,12 @@ img_mnp = img_m.image_manipulation()
 # ==================Display GUI==================
 # Disclaimer text
 text_content = """
-*Grayscaling before applying other features\n
-*images 2 is for boolean operation\n('NOT' button)\n
-*arithmatic operator using 2 images\n(Violet button)\n
-*use top right green button to update your image"""
+============== README ==============\n
+*Orange button need RGB image\n
+*White button need 1 grayscale image\n
+*'NOT' button need binary image (boolean operation)\n
+*Violet button need 2 grayscale images (arithmetic operator)\n
+*Top right green button used to update your image"""
 
 text_disc = tk.Text(root, height=18, width=40, highlightthickness=3, padx=4,
                     highlightbackground='#B33A3A')
@@ -190,41 +209,41 @@ bright_scale.place(x=90, y=8)
 
 # Biner
 biner_label = tk.Label(root, text='Biner(0-255): ', font=('ariel 10 bold'))
-biner_label.place(x=250, y=8)
+biner_label.place(x=350, y=8)
 biner_thresh = tk.IntVar()
 biner_scale = ttk.Scale(root, from_=0, to=255, variable=biner_thresh,
                         orient=tk.HORIZONTAL, command=biner)
-biner_scale.place(x=345, y=8)
+biner_scale.place(x=445, y=8)
 
 # Negatif
 btn_reset = tk.Button(root, text="Negative", width=10, bg='white', fg='black', border=2,
                       font=('ariel 10 bold'), relief=tk.GROOVE, command=negative)
-btn_reset.place(x=520, y=8)
+btn_reset.place(x=730, y=8)
 
 # grayscale
 btn_grayscale = tk.Button(root, text="Grayscale", width=10, bg='#ff9e42', fg='black', border=2,
                           font=('ariel 10 bold'), relief=tk.GROOVE, command=grayscale)
-btn_grayscale.place(x=520, y=40)
+btn_grayscale.place(x=730, y=40)
 
 # addition
 btn_add = tk.Button(root, text="Addition", width=10, bg='#B4A1EE', fg='black', border=2,
                     font=('ariel 10 bold'), relief=tk.GROOVE, command=img_add)
-btn_add.place(x=420, y=70)
+btn_add.place(x=630, y=70)
 
 # substraction
 btn_sub = tk.Button(root, text="Substraction", width=10, bg='#B4A1EE', fg='black', border=2,
                     font=('ariel 10 bold'), relief=tk.GROOVE, command=img_sub)
-btn_sub.place(x=420, y=100)
+btn_sub.place(x=630, y=100)
 
 # multiplication
 btn_mult = tk.Button(root, text="Multiply", width=10, bg='#B4A1EE', fg='black', border=2,
                      font=('ariel 10 bold'), relief=tk.GROOVE, command=img_mult)
-btn_mult.place(x=520, y=70)
+btn_mult.place(x=730, y=70)
 
 # not operation
 btn_not = tk.Button(root, text="NOT", width=10, bg='#ADD8E6', fg='black', border=2,
                     font=('ariel 10 bold'), relief=tk.GROOVE, command=img_not)
-btn_not.place(x=520, y=100)
+btn_not.place(x=730, y=100)
 
 # translation
 input_x_label = tk.Label(root, text='Translation: ', font=('ariel 10 bold'))
@@ -250,6 +269,22 @@ values = ["90CW", "90CCW"]
 rotate_combo = ttk.Combobox(root, values=values, font=('ariel 10 bold'))
 rotate_combo.place(x=85, y=120)
 rotate_combo.bind("<<ComboboxSelected>>", img_rotate)
+
+# zoom
+zoom = tk.Label(root, text="Zoom:", font=("ariel 10 bold"))
+zoom.place(x=350, y=80)
+values = ["Zoom in", "Zoom out"]
+zoom_combo = ttk.Combobox(root, values=values, font=('ariel 10 bold'))
+zoom_combo.place(x=410, y=80)
+zoom_combo.bind("<<ComboboxSelected>>", img_zoom)
+
+# combobox flip
+flip = tk.Label(root, text="Flip:", font=("ariel 10 bold"))
+flip.place(x=350, y=120)
+values = ["Flip horizontal", "Flip vertical"]
+flip_combo = ttk.Combobox(root, values=values, font=('ariel 10 bold'))
+flip_combo.place(x=410, y=120)
+flip_combo.bind("<<ComboboxSelected>>", img_flip)
 
 # ==================Display GUI==================
 # ==================Display Image==================
